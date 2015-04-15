@@ -19,7 +19,6 @@ function keepAwayFromOthers(tweep) {
        if (tweep.distanceFrom(otherTweep) <= 50) {
            xvel = xvel - (otherTweep.xpos - tweep.xpos);
            yvel = yvel - (otherTweep.ypos - tweep.ypos);
-           console.log("Xvel :"+xvel+" Yvel:"+yvel);
        }
     });
 
@@ -69,9 +68,5 @@ $(function() {
       new Tweep(100, 950, "#tweep-8")
     ];
 
-    //tweeps.forEach(function(tweep) {
-    //    tweep.updatePosition();
-    //    repaint(tweep);
-    //});
     setInterval(gameLoop, 200);
 });
