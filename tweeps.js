@@ -23,8 +23,8 @@ function keepAwayFromOthers(tweep) {
        }
     });
 
-    tweep.xvel += xvel;
-    tweep.yvel += yvel;
+    tweep.xvel += xvel / 4;
+    tweep.yvel += yvel / 4;
 }
 
 function matchVelocity(tweep) {
@@ -80,14 +80,14 @@ function gameLoop() {
 
 $(function() {
     tweeps = [
-      new Tweep(100, 200, "#tweep-1"),
-      new Tweep(150, 300, "#tweep-2"),
-      new Tweep(200, 400, "#tweep-3"),
-      new Tweep(200, 550, "#tweep-4"),
-      new Tweep(400, 600, "#tweep-5"),
-      new Tweep(850, 350, "#tweep-6"),
-      new Tweep(300, 50, "#tweep-7"),
-      new Tweep(600, 150, "#tweep-8")
+      new Tweep(-100, 200, "#tweep-1"),
+      new Tweep(-100, 600, "#tweep-2"),
+      new Tweep(-100, 1000, "#tweep-4"),
+      new Tweep(400, 1200, "#tweep-3"),
+      new Tweep(1600, 800, "#tweep-5"),
+      new Tweep(1600, 400, "#tweep-6"),
+      new Tweep(200, -100, "#tweep-7"),
+      new Tweep(800, -100, "#tweep-8")
     ];
 
     setInterval(gameLoop, 200);
