@@ -5,3 +5,8 @@ var Tweep = function(x, y, selector) {
     this.yvel = 0;
     this.selector = selector;
 };
+
+Tweep.prototype.updatePosition = function() {
+    this.xpos += this.xvel;
+    this.ypos += this.yvel;
+};

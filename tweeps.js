@@ -1,5 +1,28 @@
 var TWEEPS;
 
+function update(tweep, TWEEPS) {
+    attractToCenterOfMass(tweep, TWEEPS);
+    tweep.updatePosition();
+}
+
+function attractToCenterOfMass(tweep, TWEEPS) {
+    console.log(calculateCenterOfMass);
+    var centerOfMass = calculateCenterOfMass(TWEEPS);
+    tweep.xvel += (centerOfMass.x - tweep.xpos) / 100;
+    tweep.yvel += (centerOfMass.y - tweep.ypos) / 100;
+}
+
+function calculateCenterOfMass(TWEEPS) {
+    var centerOfMass = {x: 0, y: 0};
+    TWEEPS.forEach(function(tweep){
+        centerOfMass.x += tweep.xpos;
+        centerOfMass.y += tweep.ypos;
+    });
+    centerOfMass.x /= TWEEPS.length;
+    centerOfMass.y /= TWEEPS.length;
+    return centerOfMass;
+}
+
 function repaint(tweep) {
     $tweep = $(tweep.selector);
     $tweep.offset({
@@ -8,15 +31,9 @@ function repaint(tweep) {
     });
 }
 
-function updatePosition(tweep) {
-    tweep.xpos += 1;
-    tweep.ypos += 1;
-}
-
 function gameLoop() {
-    console.log(TWEEPS);
     TWEEPS.forEach(function(tweep) {
-        updatePosition(tweep);
+        update(tweep, TWEEPS);
         repaint(tweep);
     });
 }
