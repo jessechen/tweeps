@@ -3,10 +3,11 @@ var tweeps;
 function updateVelocity(tweep) {
     attractToCenterOfMass(tweep);
     keepAwayFromOthers(tweep);
+    matchVelocity(tweep);
 }
 
 function attractToCenterOfMass(tweep) {
-    var centerOfMass = calculateCenterOfMass(tweeps);
+    var centerOfMass = calculateCenterOfMass(tweep);
     tweep.xvel += (centerOfMass.x - tweep.xpos) / 100;
     tweep.yvel += (centerOfMass.y - tweep.ypos) / 100;
 }
@@ -26,15 +27,36 @@ function keepAwayFromOthers(tweep) {
     tweep.yvel += yvel;
 }
 
-function calculateCenterOfMass() {
+function matchVelocity(tweep) {
+    var averageVelocity = calculateAverageVelocity(tweep);
+    tweep.xvel += (averageVelocity.x - tweep.xvel) / 8;
+    tweep.yvel += (averageVelocity.y - tweep.xvel) / 8;
+}
+
+function calculateCenterOfMass(ignoredTweep) {
     var centerOfMass = {x: 0, y: 0};
     tweeps.forEach(function(tweep){
-        centerOfMass.x += tweep.xpos;
-        centerOfMass.y += tweep.ypos;
+        if(tweep.selector != ignoredTweep.selector) {
+            centerOfMass.x += tweep.xpos;
+            centerOfMass.y += tweep.ypos;
+        }
     });
-    centerOfMass.x /= tweeps.length;
-    centerOfMass.y /= tweeps.length;
+    centerOfMass.x /= tweeps.length - 1;
+    centerOfMass.y /= tweeps.length - 1;
     return centerOfMass;
+}
+
+function calculateAverageVelocity(ignoredTweep) {
+    var averageVelocity = {x: 0, y: 0};
+    tweeps.forEach(function(tweep){
+        if(tweep.selector != ignoredTweep.selector) {
+            averageVelocity.x += tweep.xvel;
+            averageVelocity.y += tweep.yvel;
+        }
+    });
+    averageVelocity.x /= tweeps.length - 1;
+    averageVelocity.y /= tweeps.length - 1;
+    return averageVelocity;
 }
 
 function repaint(tweep) {
@@ -62,10 +84,10 @@ $(function() {
       new Tweep(150, 300, "#tweep-2"),
       new Tweep(200, 400, "#tweep-3"),
       new Tweep(200, 550, "#tweep-4"),
-      new Tweep(200, 600, "#tweep-5"),
-      new Tweep(150, 700, "#tweep-6"),
-      new Tweep(100, 800, "#tweep-7"),
-      new Tweep(100, 950, "#tweep-8")
+      new Tweep(400, 600, "#tweep-5"),
+      new Tweep(850, 350, "#tweep-6"),
+      new Tweep(300, 50, "#tweep-7"),
+      new Tweep(600, 150, "#tweep-8")
     ];
 
     setInterval(gameLoop, 200);
