@@ -1,6 +1,7 @@
 var tweeps;
 // Set initial rally point to center of screen before mouse moves
 var mousePosition = {x: 800, y: 600};
+var scatter = 1.0;
 
 function gameLoop() {
     tweeps.forEach(function(tweep) {
@@ -11,6 +12,13 @@ function gameLoop() {
         tweep.updatePosition();
         repaint(tweep);
     });
+
+    if(scatter < 1) {
+        scatter += 0.01;
+    }
+    if(scatter < 0) {
+        scatter += 0.05;
+    }
 }
 
 function updateVelocity(tweep) {
@@ -23,8 +31,8 @@ function updateVelocity(tweep) {
 
 function attractToCenterOfMass(tweep) {
     var centerOfMass = calculateCenterOfMass(tweep);
-    tweep.xvel += (centerOfMass.x - tweep.xpos) / 100;
-    tweep.yvel += (centerOfMass.y - tweep.ypos) / 100;
+    tweep.xvel += (centerOfMass.x - tweep.xpos) * scatter / 100;
+    tweep.yvel += (centerOfMass.y - tweep.ypos) * scatter / 100;
 }
 
 function keepAwayFromOthers(tweep) {
@@ -52,8 +60,8 @@ function attractToMouse(tweep) {
     var xdelta = mousePosition.x - tweep.xpos;
     var ydelta = mousePosition.y - tweep.ypos;
 
-    tweep.xvel += xdelta / 200;
-    tweep.yvel += ydelta / 200;
+    tweep.xvel += xdelta * scatter / 200;
+    tweep.yvel += ydelta * scatter / 200;
 }
 
 function limitVelocity(tweep) {
@@ -125,6 +133,10 @@ $(function() {
     $(document).on("mousemove", function(evt) {
         mousePosition.x = evt.pageX;
         mousePosition.y = evt.pageY;
+    });
+
+    $(document).on("click", function() {
+        scatter = -4;
     });
 
     setInterval(gameLoop, 25);
