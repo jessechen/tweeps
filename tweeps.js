@@ -31,18 +31,9 @@ function attractToCenterOfMass(tweep) {
 }
 
 function keepAwayFromOthers(tweep) {
-    var xvel = 0;
-    var yvel = 0;
-
-    tweeps.forEach(function(otherTweep) {
-       if (tweep.distanceFrom(otherTweep) <= 80) {
-           xvel = xvel - (otherTweep.xpos - tweep.xpos);
-           yvel = yvel - (otherTweep.ypos - tweep.ypos);
-       }
-    });
-
-    tweep.xvel += xvel / 10;
-    tweep.yvel += yvel / 10;
+    var repulsion = calculateRepulsionVector(tweep);
+    tweep.xvel += repulsion.x / 10;
+    tweep.yvel += repulsion.y / 10;
 }
 
 function matchVelocity(tweep) {
@@ -52,28 +43,14 @@ function matchVelocity(tweep) {
 }
 
 function attractToMouse(tweep) {
-    var xdelta = mousePosition.x - tweep.xpos;
-    var ydelta = mousePosition.y - tweep.ypos;
-
-    tweep.xvel += xdelta * scatter / 200;
-    tweep.yvel += ydelta * scatter / 200;
+    tweep.xvel += (mousePosition.x - tweep.xpos) * scatter / 200;
+    tweep.yvel += (mousePosition.y - tweep.ypos) * scatter / 200;
 }
 
 function limitVelocity(tweep) {
     var newVelocity = obeySpeedLimit(5, tweep.xvel, tweep.yvel);
-
     tweep.xvel = newVelocity.x;
     tweep.yvel = newVelocity.y;
-}
-
-function reduceScatter() {
-    if(scatter >= 0.6 && scatter < 1) {
-        scatter += 0.005;
-    } else if (scatter >= 0 && scatter < 0.6) {
-        scatter += 0.01;
-    } else if(scatter < 0) {
-        scatter += 0.05;
-    }
 }
 
 function calculateCenterOfMass(ignoredTweep) {
@@ -87,6 +64,17 @@ function calculateCenterOfMass(ignoredTweep) {
     centerOfMass.x /= tweeps.length - 1;
     centerOfMass.y /= tweeps.length - 1;
     return centerOfMass;
+}
+
+function calculateRepulsionVector(tweep) {
+    var repulsionVector = {x: 0, y: 0};
+    tweeps.forEach(function(otherTweep) {
+        if (tweep.distanceFrom(otherTweep) <= 80) {
+            repulsionVector.x += tweep.xpos - otherTweep.xpos;
+            repulsionVector.y += tweep.ypos - otherTweep.ypos;
+        }
+    });
+    return repulsionVector;
 }
 
 function calculateAverageVelocity(ignoredTweep) {
@@ -109,6 +97,16 @@ function obeySpeedLimit(speedLimit, x, y) {
         y /= (magnitude / speedLimit);
     }
     return {x: x, y: y};
+}
+
+function reduceScatter() {
+    if(scatter >= 0.6 && scatter < 1) {
+        scatter += 0.005;
+    } else if (scatter >= 0 && scatter < 0.6) {
+        scatter += 0.01;
+    } else if(scatter < 0) {
+        scatter += 0.05;
+    }
 }
 
 function repaint(tweep) {
@@ -144,5 +142,5 @@ $(function() {
         scatter = -4;
     });
 
-    setInterval(gameLoop, 25);
+    setInterval(gameLoop, 25); // 40 fps
 });
