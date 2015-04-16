@@ -48,7 +48,12 @@ function matchVelocity(tweep) {
 }
 
 function attractToMouse(tweep) {
+    var xdelta = mousePosition.x - tweep.xpos;
+    var ydelta = mousePosition.y - tweep.ypos;
 
+    velocityChange = obeySpeedLimit(2, xdelta / 10, ydelta / 10);
+    tweep.xvel += velocityChange.x;
+    tweep.yvel += velocityChange.y;
 }
 
 function calculateCenterOfMass(ignoredTweep) {
@@ -75,6 +80,15 @@ function calculateAverageVelocity(ignoredTweep) {
     averageVelocity.x /= tweeps.length - 1;
     averageVelocity.y /= tweeps.length - 1;
     return averageVelocity;
+}
+
+function obeySpeedLimit(speedLimit, x, y) {
+    var magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    if(magnitude > speedLimit) {
+        x /= (magnitude / speedLimit);
+        y /= (magnitude / speedLimit);
+    }
+    return {x: x, y: y};
 }
 
 function repaint(tweep) {
@@ -105,5 +119,5 @@ $(function() {
         mousePosition.y = evt.pageY;
     });
 
-    setTimeout(gameLoop, 200);
+    setInterval(gameLoop, 200);
 });
