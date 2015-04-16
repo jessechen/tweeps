@@ -1,9 +1,23 @@
 var tweeps;
+// Set initial rally point to center of screen before mouse moves
+var mousePosition = {x: 800, y: 600};
+
+function gameLoop() {
+    tweeps.forEach(function(tweep) {
+        updateVelocity(tweep);
+    });
+
+    tweeps.forEach(function(tweep) {
+        tweep.updatePosition();
+        repaint(tweep);
+    });
+}
 
 function updateVelocity(tweep) {
     attractToCenterOfMass(tweep);
     keepAwayFromOthers(tweep);
     matchVelocity(tweep);
+    attractToMouse(tweep);
 }
 
 function attractToCenterOfMass(tweep) {
@@ -31,6 +45,10 @@ function matchVelocity(tweep) {
     var averageVelocity = calculateAverageVelocity(tweep);
     tweep.xvel += (averageVelocity.x - tweep.xvel) / 8;
     tweep.yvel += (averageVelocity.y - tweep.xvel) / 8;
+}
+
+function attractToMouse(tweep) {
+
 }
 
 function calculateCenterOfMass(ignoredTweep) {
@@ -67,28 +85,25 @@ function repaint(tweep) {
     });
 }
 
-function gameLoop() {
-    tweeps.forEach(function(tweep) {
-        updateVelocity(tweep, tweeps);
-    });
-
-    tweeps.forEach(function(tweep) {
-        tweep.updatePosition();
-        repaint(tweep);
-    });
-}
-
 $(function() {
     tweeps = [
-      new Tweep(-100, 200, "#tweep-1"),
-      new Tweep(-100, 600, "#tweep-2"),
-      new Tweep(-100, 1000, "#tweep-4"),
-      new Tweep(400, 1200, "#tweep-3"),
-      new Tweep(1600, 800, "#tweep-5"),
-      new Tweep(1600, 400, "#tweep-6"),
-      new Tweep(200, -100, "#tweep-7"),
-      new Tweep(800, -100, "#tweep-8")
+      new Tweep(-100,  200, "#tweep-1"),
+      new Tweep(-100,  600, "#tweep-2"),
+      new Tweep(-100, 1000, "#tweep-3"),
+      new Tweep( 400, 1200, "#tweep-4"),
+      new Tweep(1600,  800, "#tweep-5"),
+      new Tweep(1600,  400, "#tweep-6"),
+      new Tweep( 200, -100, "#tweep-7"),
+      new Tweep( 800, -100, "#tweep-8")
     ];
 
-    setInterval(gameLoop, 200);
+    gameLoop();
+    $(".tweep").show();
+
+    $(document).on("mousemove", function(evt) {
+        mousePosition.x = evt.pageX;
+        mousePosition.y = evt.pageY;
+    });
+
+    setTimeout(gameLoop, 200);
 });
