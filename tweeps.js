@@ -32,8 +32,8 @@ function attractToCenterOfMass(tweep) {
 
 function keepAwayFromOthers(tweep) {
     var repulsion = calculateRepulsionVector(tweep);
-    tweep.xvel += repulsion.x / 10;
-    tweep.yvel += repulsion.y / 10;
+    tweep.xvel += repulsion.x * 100;
+    tweep.yvel += repulsion.y * 100;
 }
 
 function matchVelocity(tweep) {
@@ -69,9 +69,9 @@ function calculateCenterOfMass(ignoredTweep) {
 function calculateRepulsionVector(tweep) {
     var repulsionVector = {x: 0, y: 0};
     tweeps.forEach(function(otherTweep) {
-        if (tweep.distanceFrom(otherTweep) <= 80) {
-            repulsionVector.x += tweep.xpos - otherTweep.xpos;
-            repulsionVector.y += tweep.ypos - otherTweep.ypos;
+        if (tweep.distanceFrom(otherTweep) >= 1 && tweep.distanceFrom(otherTweep) <= 100) {
+            repulsionVector.x += 1 / (tweep.xpos - otherTweep.xpos);
+            repulsionVector.y += 1 / (tweep.ypos - otherTweep.ypos);
         }
     });
     return repulsionVector;
