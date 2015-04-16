@@ -8,17 +8,12 @@ function gameLoop() {
         updateVelocity(tweep);
     });
 
+    reduceScatter();
+
     tweeps.forEach(function(tweep) {
         tweep.updatePosition();
         repaint(tweep);
     });
-
-    if(scatter < 1) {
-        scatter += 0.01;
-    }
-    if(scatter < 0) {
-        scatter += 0.05;
-    }
 }
 
 function updateVelocity(tweep) {
@@ -69,6 +64,16 @@ function limitVelocity(tweep) {
 
     tweep.xvel = newVelocity.x;
     tweep.yvel = newVelocity.y;
+}
+
+function reduceScatter() {
+    if(scatter >= 0.6 && scatter < 1) {
+        scatter += 0.005;
+    } else if (scatter >= 0 && scatter < 0.6) {
+        scatter += 0.01;
+    } else if(scatter < 0) {
+        scatter += 0.05;
+    }
 }
 
 function calculateCenterOfMass(ignoredTweep) {
