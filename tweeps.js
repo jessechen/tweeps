@@ -32,32 +32,32 @@ function keepAwayFromOthers(tweep) {
     var yvel = 0;
 
     tweeps.forEach(function(otherTweep) {
-       if (tweep.distanceFrom(otherTweep) <= 100) {
+       if (tweep.distanceFrom(otherTweep) <= 80) {
            xvel = xvel - (otherTweep.xpos - tweep.xpos);
            yvel = yvel - (otherTweep.ypos - tweep.ypos);
        }
     });
 
-    tweep.xvel += xvel / 4;
-    tweep.yvel += yvel / 4;
+    tweep.xvel += xvel / 10;
+    tweep.yvel += yvel / 10;
 }
 
 function matchVelocity(tweep) {
     var averageVelocity = calculateAverageVelocity(tweep);
-    tweep.xvel += (averageVelocity.x - tweep.xvel) / 8;
-    tweep.yvel += (averageVelocity.y - tweep.xvel) / 8;
+    tweep.xvel += (averageVelocity.x - tweep.xvel) / 10;
+    tweep.yvel += (averageVelocity.y - tweep.xvel) / 10;
 }
 
 function attractToMouse(tweep) {
     var xdelta = mousePosition.x - tweep.xpos;
     var ydelta = mousePosition.y - tweep.ypos;
 
-    tweep.xvel += xdelta / 20;
-    tweep.yvel += ydelta / 20;
+    tweep.xvel += xdelta / 200;
+    tweep.yvel += ydelta / 200;
 }
 
 function limitVelocity(tweep) {
-    var newVelocity = obeySpeedLimit(4, tweep.xvel, tweep.yvel);
+    var newVelocity = obeySpeedLimit(5, tweep.xvel, tweep.yvel);
 
     tweep.xvel = newVelocity.x;
     tweep.yvel = newVelocity.y;
@@ -111,8 +111,8 @@ $(function() {
     tweeps = [
       new Tweep(-100,  200, "#tweep-1"),
       new Tweep(-100,  600, "#tweep-2"),
-      new Tweep(-100, 1000, "#tweep-3"),
-      new Tweep( 400, 1200, "#tweep-4"),
+      new Tweep( 400, 1200, "#tweep-3"),
+      new Tweep(1000, 1200, "#tweep-4"),
       new Tweep(1600,  800, "#tweep-5"),
       new Tweep(1600,  400, "#tweep-6"),
       new Tweep( 200, -100, "#tweep-7"),
@@ -127,5 +127,5 @@ $(function() {
         mousePosition.y = evt.pageY;
     });
 
-    setInterval(gameLoop, 50);
+    setInterval(gameLoop, 25);
 });
