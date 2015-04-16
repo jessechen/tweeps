@@ -18,6 +18,7 @@ function updateVelocity(tweep) {
     keepAwayFromOthers(tweep);
     matchVelocity(tweep);
     attractToMouse(tweep);
+    limitVelocity(tweep);
 }
 
 function attractToCenterOfMass(tweep) {
@@ -31,7 +32,7 @@ function keepAwayFromOthers(tweep) {
     var yvel = 0;
 
     tweeps.forEach(function(otherTweep) {
-       if (tweep.distanceFrom(otherTweep) <= 50) {
+       if (tweep.distanceFrom(otherTweep) <= 100) {
            xvel = xvel - (otherTweep.xpos - tweep.xpos);
            yvel = yvel - (otherTweep.ypos - tweep.ypos);
        }
@@ -51,9 +52,15 @@ function attractToMouse(tweep) {
     var xdelta = mousePosition.x - tweep.xpos;
     var ydelta = mousePosition.y - tweep.ypos;
 
-    velocityChange = obeySpeedLimit(2, xdelta / 10, ydelta / 10);
-    tweep.xvel += velocityChange.x;
-    tweep.yvel += velocityChange.y;
+    tweep.xvel += xdelta / 20;
+    tweep.yvel += ydelta / 20;
+}
+
+function limitVelocity(tweep) {
+    var newVelocity = obeySpeedLimit(4, tweep.xvel, tweep.yvel);
+
+    tweep.xvel = newVelocity.x;
+    tweep.yvel = newVelocity.y;
 }
 
 function calculateCenterOfMass(ignoredTweep) {
@@ -100,6 +107,7 @@ function repaint(tweep) {
 }
 
 $(function() {
+    // Move tweeps offscreen before making them visible so there's no brief flash of visibility
     tweeps = [
       new Tweep(-100,  200, "#tweep-1"),
       new Tweep(-100,  600, "#tweep-2"),
@@ -119,5 +127,5 @@ $(function() {
         mousePosition.y = evt.pageY;
     });
 
-    setInterval(gameLoop, 200);
+    setInterval(gameLoop, 50);
 });
